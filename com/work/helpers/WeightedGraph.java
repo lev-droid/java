@@ -12,9 +12,9 @@ class Edge {
     }
 }
 // Graph class
-class Graph {
+public class WeightedGraph {
     // node of adjacency list 
-    static class Node {
+    public static class Node {
         int value, weight;
         Node(int value, int weight)  {
             this.value = value;
@@ -24,10 +24,10 @@ class Graph {
 
 // define adjacency list
 
-    List<List<Node>> adj_list = new ArrayList<>();
+    public List<List<Node>> adj_list = new ArrayList<>();
 
     //Graph Constructor
-    public Graph(List<Edge> edges)
+    public WeightedGraph(List<Edge> edges)
     {
         // adjacency list memory allocation
         for (int i = 0; i < edges.size(); i++)
@@ -41,7 +41,7 @@ class Graph {
         }
     }
     // print adjacency list for the graph
-    public static void printGraph(Graph graph)  {
+    public static void printGraph(WeightedGraph graph)  {
         int src_vertex = 0;
         int list_size = graph.adj_list.size();
 
