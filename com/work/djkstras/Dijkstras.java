@@ -1,5 +1,7 @@
 /**
  * @param <G> generic type, used as substitute for node type
+ * @author Lev petersen
+ * Fast Fibonacci Heap implementation
  * */
 
 package com.work.djkstras;
