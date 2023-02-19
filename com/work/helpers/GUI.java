@@ -127,4 +127,5 @@ public class GUI extends JFrame {
         gui.new RenderObject(100, 100, 50, 50, renderRect);
         gui.new ClickableObject(new int[]{100, 100, 50, 50}, hitboxRect, onClick);
     }
+
 }
