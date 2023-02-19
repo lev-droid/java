@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="helpers">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/work/helpers/tinylog-impl-2.6.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/work/helpers/tinylog-api-2.6.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

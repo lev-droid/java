@@ -90,7 +90,7 @@ public final class FibonacciHeap<T> {
         /* Create the entry object, which is a circularly-linked list of length
          * one.
          */
-        Entry<T> result = new Entry<T>(value, priority);
+        Entry<T> result = new Entry<>(value, priority);
 
         /* Merge this singleton list with the tree list. */
         mMin = mergeLists(mMin, result);
@@ -136,7 +136,7 @@ public final class FibonacciHeap<T> {
 
     /**
      * Given two Fibonacci heaps, returns a new Fibonacci heap that contains
-     * all of the elements of the two heaps.  Each of the input heaps is
+     * all the elements of the two heaps.  Each of the input heaps is
      * destructively modified by having all its elements removed.  You can
      * continue to use those heaps, but be aware that they will be empty
      * after this call completes.
