@@ -4,33 +4,35 @@
  * Fast Fibonacci Heap implementation
  * */
 
-package com.work.djkstras;
+package com.work.algorithms;
 import java.util.*; // For HashMap
 
 import com.work.helpers.*;
 public final class Dijkstras {
 
     public static <G> Map<G, Double> fastPath(WeightedGraph<G> graph, G source) {
-        //nodes
+        //Create a Hash Map to hold entries.
         Map<G, FibonacciHeap.Entry<G>> entries = new HashMap<>();
-        // costs
+        // Create a HashMap to hold node distances.
         Map<G, Double> distance = new HashMap<>();
-        //prio q
+        //Create a Fibonacci Heap to hold nodes.
         FibonacciHeap<G> queue = new FibonacciHeap<>();
-        // queue each item with postivity infinity
+        // Initialize the heap by adding all nodes to the HashMap with an entry in the heap with a priority of infinity.
         for (G node : graph)
             entries.put(node, queue.enqueue(node, Double.POSITIVE_INFINITY));
-        // give the initial node a cost of 0
+        // Add the source node to the heap with a priority of 0.
         queue.decreaseKey(entries.get(source), 0.0);
+        //Loop through the heap while it is not empty.
         while (!queue.isEmpty()) {
-            //while nodes not solved
-
-            // find the first element added to the que
+            // Find the node with the minimum cost and remove it from the heap.
             FibonacciHeap.Entry<G> currentNode = queue.dequeueMin();
-            distance.put(currentNode.getValue(), currentNode.getPriority());
+            //Update the distance HashMap with the cost of the removed node.
+                    distance.put(currentNode.getValue(), currentNode.getPriority());
+            //For each neighbor of the removed node, calculate the cost of the path from the source node through the removed node to the neighbor.
             for (Map.Entry<G, Double> nextNode : graph.edgesFrom(currentNode.getValue()).entrySet()) {
                 G destination = nextNode.getKey();
                 double pathCost = currentNode.getPriority() + nextNode.getValue();
+                //If the new cost is lower than the current cost of the neighbor, update the neighbor's entry in the heap with the new cost.
                 if (!distance.containsKey(destination)) {
                     FibonacciHeap.Entry<G> dest = entries.get(destination);
                     if (pathCost < dest.getPriority()) {
@@ -39,6 +41,7 @@ public final class Dijkstras {
                 }
             }
         }
+        //Return the distance HashMap.
         return distance;
     }
 }

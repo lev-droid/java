@@ -1,4 +1,4 @@
-package com.work.djkstras;
+package com.work.algorithms;
 import com.work.helpers.*;
 import java.util.*;
 
@@ -9,6 +9,7 @@ public class AStar {
         Map<T, Double> gScore = new HashMap<>();
         Map<T, Double> fScore = new HashMap<>();
         Map<T, T> cameFrom = new HashMap<>();
+
 
         Set<T> openSet = new HashSet<>();
         Set<T> closedSet = new HashSet<>();

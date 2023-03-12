@@ -1,4 +1,4 @@
-package com.work.djkstras;
+package com.work.algorithms;
 import com.work.helpers.WeightedGraph;
 import java.util.*;
 
@@ -6,7 +6,10 @@ public class BellmanFord<T> {
 
     public static <T> Map<T, Double> computeShortestPaths(WeightedGraph<T> graph, T source) {
         // Initialize maps to hold distances and previous nodes for each node in the graph
+        // Create a HashMap to hold node entries.
+
         Map<T, Double> distances = new HashMap<>();
+        //Create a HashMap to hold node distances.
         Map<T, T> previousNodes = new HashMap<>();
 
         // Set the distance to all nodes to be infinite, except for the source node which is set to 0

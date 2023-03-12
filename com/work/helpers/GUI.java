@@ -1,5 +1,6 @@
 package com.work.helpers;
 
+import com.work.helpers.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -9,8 +10,8 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class GUI extends JFrame {
-
+public class    GUI extends JFrame {
+    WeightedGraph<String> graph = new WeightedGraph<>();
     ArrayList<RenderObject> RenderObjects = new ArrayList<>();
     public class RenderObject
     {
@@ -107,6 +108,11 @@ public class GUI extends JFrame {
 
     }
 
+    //method to draw weighted graph
+    public void weightedGraph(WeightedGraph graph){
+
+
+    }
     public static void main(String[] args)
     {
         GUI gui = new GUI();

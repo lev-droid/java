@@ -3,7 +3,6 @@ package com.work.helpers;
 import java.util.*;
 
 public final class WeightedGraph<T> implements Iterable<T> {
-
     private final Map<T, Map<T, Double>> mGraph = new HashMap<>();
 
     public boolean addNode(T node) {
