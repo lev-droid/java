@@ -19,110 +19,107 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Comparator;
 import java.util.List;
-
-public class GraphVisualizer extends JFrame {
-    private static final int WIDTH = 800;
-    private static final int HEIGHT = 800;
-    private static final int NODE_RADIUS = 20;
-
-    private WeightedGraph<String> graph;
-    private Map<String, Point> nodeLocations;
-    private String selectedAlgorithm;
+public class GraphVisualizer extends JFrame implements ActionListener {
+    private final WeightedGraph<String> graph = new WeightedGraph<>();
+    private final Map<String, Point> nodeLocations = new HashMap<>();
+    private final Random random = new Random();
+    private final int FRAME_WIDTH = 800;
+    private final int FRAME_HEIGHT = 600;
+    private String selectedAlgorithm = "Dijkstras";
     private String startNode;
     private String endNode;
 
     public GraphVisualizer() {
-        setTitle("Graph Algorithm Visualizer");
-        setSize(WIDTH, HEIGHT);
+        setTitle("Graph Visualizer");
+        setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Initialize graph, node locations, and the selected algorithm
-        graph = new WeightedGraph<>();
-        nodeLocations = new HashMap<>();
-        selectedAlgorithm = "Dijkstras";
+        JMenuBar menuBar = new JMenuBar();
+        setJMenuBar(menuBar);
 
-        // Add mouse and keyboard listeners for user interaction
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                handleMouseClick(e);
-            }
-        });
+        JMenu graphMenu = new JMenu("Graph");
+        menuBar.add(graphMenu);
 
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                handleKeyPress(e);
-            }
-        });
+        JMenuItem addNodeMenuItem = new JMenuItem("Add node");
+        addNodeMenuItem.addActionListener(this);
+        graphMenu.add(addNodeMenuItem);
 
-        // Set focusable for key events
-        setFocusable(true);
+        JMenuItem addEdgeMenuItem = new JMenuItem("Add edge");
+        addEdgeMenuItem.addActionListener(this);
+        graphMenu.add(addEdgeMenuItem);
+
+        JMenuItem removeNodeMenuItem = new JMenuItem("Remove node");
+        removeNodeMenuItem.addActionListener(this);
+        graphMenu.add(removeNodeMenuItem);
+
+        JMenuItem removeEdgeMenuItem = new JMenuItem("Remove edge");
+        removeEdgeMenuItem.addActionListener(this);
+        graphMenu.add(removeEdgeMenuItem);
+
+        JMenu algorithmMenu = new JMenu("Algorithm");
+        menuBar.add(algorithmMenu);
+
+        JMenuItem selectAlgorithmMenuItem = new JMenuItem("Select algorithm");
+        selectAlgorithmMenuItem.addActionListener(this);
+        algorithmMenu.add(selectAlgorithmMenuItem);
+
+        JMenuItem runAlgorithmMenuItem = new JMenuItem("Run algorithm");
+        runAlgorithmMenuItem.addActionListener(this);
+        algorithmMenu.add(runAlgorithmMenuItem);
+
+        CustomPanel panel = new CustomPanel(graph, nodeLocations);
+        add(panel);
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        drawGraph(g);
-    }
+    public void actionPerformed(ActionEvent e) {
+        String command = e.getActionCommand();
 
-    private void drawGraph(Graphics g) {
-        // Draw edges
-        for (String node : graph) {
-            Map<String, Double> edges = graph.edgesFrom(node);
-            for (String neighbor : edges.keySet()) {
-                drawEdge(g, node, neighbor);
-            }
+        switch (command) {
+            case "Add node":
+                addNode();
+                break;
+            case "Add edge":
+                addEdge();
+                break;
+            case "Remove node":
+                removeNode();
+                break;
+            case "Remove edge":
+                removeEdge();
+                break;
+            case "Select algorithm":
+                selectAlgorithm();
+                break;
+            case "Run algorithm":
+                runAlgorithm();
+                break;
+            default:
+                throw new RuntimeException("Unknown command");
         }
-
-        // Draw nodes
-        for (String node : graph) {
-            drawNode(g, node);
-        }
     }
 
-    private void drawNode(Graphics g, String node) {
-        Point location = nodeLocations.get(node);
-        g.setColor(Color.BLUE);
-        g.fillOval(location.x - NODE_RADIUS, location.y - NODE_RADIUS, NODE_RADIUS * 2, NODE_RADIUS * 2);
-        g.setColor(Color.WHITE);
-        g.drawString(node, location.x, location.y);
-    }
-
-    private void drawEdge(Graphics g, String start, String end) {
-        Point startLocation = nodeLocations.get(start);
-        Point endLocation = nodeLocations.get(end);
-        g.setColor(Color.BLACK);
-        g.drawLine(startLocation.x, startLocation.y, endLocation.x, endLocation.y);
-    }
-
-    private void handleMouseClick(MouseEvent e) {
+    private void addNode() {
         String nodeName = JOptionPane.showInputDialog("Enter node name:");
-        if (nodeName != null && !nodeName.isEmpty()) {
-            graph.addNode(nodeName);
-            nodeLocations.put(nodeName, e.getPoint());
-            repaint();
-        }
-    }
-
-    private void handleKeyPress(KeyEvent e) {
-        // Handle key presses for adding/removing edges and running algorithms
-        if (e.getKeyChar() == 'e') {
-            addEdge();
-        } else if (e.getKeyChar() == 'r') {
-            removeEdge();
-        } else if (e.getKeyChar() == 's') {
-            selectAlgorithm();
-        } else if (e.getKeyChar() == 'g') {
-            runAlgorithm();
-        }
+        graph.addNode(nodeName);
+        nodeLocations.put(nodeName, new Point(random.nextInt(FRAME_WIDTH), random.nextInt(FRAME_HEIGHT)));
+        repaint();
     }
 
     private void addEdge() {
         String start = JOptionPane.showInputDialog("Enter start node:");
         String end = JOptionPane.showInputDialog("Enter end node:");
         double weight = Double.parseDouble(JOptionPane.showInputDialog("Enter edge weight:"));
+
         graph.addEdge(start, end, weight);
+        repaint();
+    }
+
+    private void removeNode() {
+        String nodeName = JOptionPane.showInputDialog("Enter node name:");
+        graph.removeNode(nodeName);
+        nodeLocations.remove(nodeName);
         repaint();
     }
 
@@ -135,18 +132,15 @@ public class GraphVisualizer extends JFrame {
 
     private void selectAlgorithm() {
         String[] algorithms = {"Dijkstras", "AStar", "BellmanFord"};
-        String algorithm = (String) JOptionPane.showInputDialog(
+        selectedAlgorithm = (String) JOptionPane.showInputDialog(
                 this,
                 "Select an algorithm:",
                 "Algorithm Selection",
                 JOptionPane.PLAIN_MESSAGE,
                 null,
                 algorithms,
-                selectedAlgorithm);
-
-        if (algorithm != null) {
-            selectedAlgorithm = algorithm;
-        }
+                selectedAlgorithm
+        );
     }
 
     private void runAlgorithm() {
@@ -154,49 +148,23 @@ public class GraphVisualizer extends JFrame {
         endNode = JOptionPane.showInputDialog("Enter end node:");
 
         List<String> path;
+
         switch (selectedAlgorithm) {
             case "Dijkstras":
                 Map<String, Double> distances = Dijkstras.fastPath(graph, startNode);
-                path = getPathFromDistances(distances, endNode);
+                path = getPathFromDistances(distances);
                 break;
             case "AStar":
-                path = AStar.aStar(graph, startNode, endNode, (a, b) -> 0); // Assuming 0 heuristic for simplicity
+                path = AStar.aStar(graph, startNode, endNode, (from, to) -> 1.0);
                 break;
             case "BellmanFord":
-                Map<String, Double> shortestPaths = BellmanFord.computeShortestPaths(graph, startNode);
-                path = getPathFromDistances(shortestPaths, endNode);
+                Map<String, Double> bellmanFordDistances = BellmanFord.computeShortestPaths(graph, startNode);
+                path = getPathFromDistances(bellmanFordDistances);
                 break;
             default:
                 throw new RuntimeException("Unknown algorithm");
         }
 
-        displayPath(path);
-    }
-
-    private List<String> getPathFromDistances(Map<String, Double> distances, String endNode) {
-        List<String> path = new ArrayList<>();
-        if (!distances.containsKey(endNode)) {
-            return path;
-        }
-
-        String currentNode = endNode;
-        path.add(currentNode);
-
-        while (distances.get(currentNode) != 0.0) {
-            Map<String, Double> neighbors = graph.edgesFrom(currentNode);
-            for (String neighbor : neighbors.keySet()) {
-                if (distances.get(currentNode) == distances.get(neighbor) + neighbors.get(neighbor)) {
-                    currentNode = neighbor;
-                    path.add(0, currentNode);
-                    break;
-                }
-            }
-        }
-
-        return path;
-    }
-
-    private void displayPath(List<String> path) {
         if (path.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No path found");
         } else {
@@ -204,8 +172,42 @@ public class GraphVisualizer extends JFrame {
         }
     }
 
+    private List<String> getPathFromDistances(Map<String, Double> distances) {
+        if (!distances.containsKey(endNode)) {
+            return List.of();
+        }
+
+        // Reconstruct the path from the distances map
+        List<String> path = new ArrayList<>();
+        String currentNode = endNode;
+        path.add(currentNode);
+
+        while (!currentNode.equals(startNode)) {
+            double minDistance = Double.POSITIVE_INFINITY;
+            String minNode = null;
+
+            for (String neighbor : graph.edgesFrom(currentNode).keySet()) {
+                double neighborDistance = distances.getOrDefault(neighbor, Double.POSITIVE_INFINITY);
+                if (neighborDistance < minDistance) {
+                    minDistance = neighborDistance;
+                    minNode = neighbor;
+                }
+            }
+
+            if (minNode == null) {
+                return List.of();
+            }
+
+            currentNode = minNode;
+            path.add(currentNode);
+        }
+
+        Collections.reverse(path);
+        return path;
+    }
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
+        EventQueue.invokeLater(() -> {
             GraphVisualizer visualizer = new GraphVisualizer();
             visualizer.setVisible(true);
         });
