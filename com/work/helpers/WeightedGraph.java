@@ -11,6 +11,16 @@ public final class WeightedGraph<T> implements Iterable<T> {
         return true;
     }
 
+    public boolean removeNode(T node) {
+    if (!this.mGraph.containsKey(node)) return false;
+    this.mGraph.remove(node);
+    for (Map<T, Double> neighbors : this.mGraph.values()) {
+        neighbors.remove(node);
+    }
+    return true;
+}
+
+    
     public void addEdge(T start, T dest, double length) {
         if (!this.mGraph.containsKey(start) || !this.mGraph.containsKey(dest))
             throw new NoSuchElementException("Both nodes must be in the graph.");
