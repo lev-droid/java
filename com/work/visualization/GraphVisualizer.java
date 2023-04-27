@@ -4,20 +4,11 @@ import com.work.helpers.WeightedGraph;
 import com.work.algorithms.*;
 
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Comparator;
 import java.util.List;
 public class GraphVisualizer extends JFrame implements ActionListener {
     private final WeightedGraph<String> graph = new WeightedGraph<>();
